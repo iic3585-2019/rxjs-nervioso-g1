@@ -1,5 +1,5 @@
 import Player from './player';
-import {DECK} from './consts';
+import {DECK, CARDS_NUMBERS} from './consts';
 
 
 export const randomPop = (array) => {
@@ -8,6 +8,7 @@ export const randomPop = (array) => {
 };
 
 export const createPlayers = () => {
+  // TODO: change parameters to corresponding event
   const p1 = new Player('Thomas', 'A', 'S');
   const p2 = new Player('Pezoa', 'C', 'V');
   const players = [p1, p2];
@@ -21,4 +22,10 @@ export const createPlayers = () => {
     });
   }
   return players;
+};
+
+export const getNextCard = (actualCard) => {
+  const cardIndex = CARDS_NUMBERS.indexOf(actualCard);
+  const nextCardIndex = (cardIndex + 1) % CARDS_NUMBERS.length;
+  return CARDS_NUMBERS[nextCardIndex];
 };

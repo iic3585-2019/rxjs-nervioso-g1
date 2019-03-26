@@ -1,6 +1,6 @@
 import {Subject} from 'rxjs';
-import {WAITING_PLAYERS, CARDS_NUMBERS} from './consts';
-import {createPlayers} from './util';
+import {WAITING_PLAYERS} from './consts';
+import {createPlayers, getNextCard} from './util';
 
 
 export default class Game {
@@ -8,7 +8,7 @@ export default class Game {
     status: WAITING_PLAYERS,
     players: createPlayers(),
     pile: [],
-    playerTurn: 0,
+    turnIndex: 0,
     actualCard: 'A',
   };
 
@@ -25,13 +25,20 @@ export default class Game {
     this.subject.next(this.state);
   };
 
-  endTurn = () => {
-    const {playerTurn, players, actualCard} = this.state;
-    this.state.playerTurn = (playerTurn + 1) % players.length;
+  drawCard = () => {
+    const {turnIndex, players} = this.state;
+    const player = players[turnIndex];
+    const card = player.drawCard();
+    console.log(this.state.pile);
+    this.state.pile.push(card);
+    this.subject.next(this.state);
+  }
 
-    const cardIndex = CARDS_NUMBERS.indexOf(actualCard);
-    const nextCardIndex = (cardIndex + 1) % CARDS_NUMBERS.length;
-    this.actualCard = CARDS_NUMBERS[nextCardIndex];
+  endTurn = () => {
+    const {turnIndex, players, actualCard} = this.state;
+    this.state.turnIndex = (turnIndex + 1) % players.length;
+
+    this.state.actualCard = getNextCard(actualCard);
 
     this.subject.next(this.state);
   }
