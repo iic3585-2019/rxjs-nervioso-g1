@@ -7,12 +7,8 @@ export const randomPop = (array) => {
   return array.splice(index, 1)[0];
 };
 
-export const createPlayers = () => {
-  // TODO: change parameters to corresponding event
-  const p1 = new Player('Thomas', 'A', 'S');
-  const p2 = new Player('Pezoa', 'C', 'V');
-  const players = [p1, p2];
 
+export const distributeDeck = (players) => {
   const deck = [...DECK];
   while (deck.length) {
     players.forEach((player) => {
@@ -21,8 +17,19 @@ export const createPlayers = () => {
       }
     });
   }
+};
+
+export const createPlayers = () => {
+  // TODO: change parameters to corresponding event
+  const p1 = new Player('Thomas', 'A', 'S');
+  const p2 = new Player('Pezoa', 'C', 'V');
+
+  const players = [p1, p2];
+  distributeDeck(players);
+
   return players;
 };
+
 
 export const getNextCard = (actualCard) => {
   const cardIndex = CARDS_NUMBERS.indexOf(actualCard);
