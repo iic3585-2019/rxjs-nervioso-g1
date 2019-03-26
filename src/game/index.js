@@ -29,15 +29,15 @@ export default class Game {
     const {turnIndex, players} = this.state;
     const player = players[turnIndex];
     const card = player.drawCard();
-    console.log(this.state.pile);
     this.state.pile.push(card);
-    this.subject.next(this.state);
+
+    this.endTurn();
   }
 
   endTurn = () => {
     const {turnIndex, players, actualCard} = this.state;
-    this.state.turnIndex = (turnIndex + 1) % players.length;
 
+    this.state.turnIndex = (turnIndex + 1) % players.length;
     this.state.actualCard = getNextCard(actualCard);
 
     this.subject.next(this.state);
