@@ -1,0 +1,33 @@
+{
+  "devDependencies": {
+    "@babel/core": "^7.4.0",
+    "@babel/plugin-proposal-class-properties": "^7.4.0",
+    "@babel/preset-env": "^7.4.2",
+    "@babel/register": "^7.4.0",
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.5",
+    "css-loader": "^2.1.1",
+    "eslint": "^5.15.3",
+    "eslint-config-google": "^0.12.0",
+    "eslint-plugin-babel": "^5.3.0",
+    "node-sass": "^4.11.0",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0",
+    "webpack-dev-server": "^3.2.1"
+  },
+  "name": "rxjs-nervioso-g1",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "repository": "git@github.com:iic3585-2019/rxjs-nervioso-g1.git",
+  "author": "group1",
+  "license": "MIT",
+  "dependencies": {
+    "rxjs": "^6.4.0"
+  },
+  "scripts": {
+    "start": "webpack-dev-server --hot",
+    "lint": "eslint ./src"
+  }
+}
