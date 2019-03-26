@@ -1,15 +1,19 @@
 import {map} from 'rxjs/operators';
 import {fromEvent} from 'rxjs';
-
+import {updateNewCard, updateCardCount} from './cards';
+import {updatePlayers} from './players';
 
 export default (game) => {
   game.pipe(map((state) => state.players))
-      .subscribe(
-          (players) => {
-            document.getElementById('players').innerHTML = players.map(
-                (player) => player.name).join('<br/>');
-          });
-  fromEvent(document.getElementById('add-player'), 'click').subscribe(() => {
-    game.addPlayer('Thomas');
+      .subscribe(updatePlayers);
+
+  game.pipe(map((state) => state.cardCount))
+      .subscribe(updateCardCount);
+
+  game.pipe(map((state) => state.pile))
+      .subscribe(updateNewCard);
+
+  fromEvent(document.getElementById('draw-card'), 'click').subscribe(() => {
+    game.drawCard();
   });
 };
