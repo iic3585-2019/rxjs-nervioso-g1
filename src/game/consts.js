@@ -1,0 +1,1 @@
+export const WAITING_PLAYERS = 'WAITING-PLAYERS';
