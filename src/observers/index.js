@@ -1,22 +1,6 @@
 import {map} from 'rxjs/operators';
 import {fromEvent} from 'rxjs';
 
-
-export default (game) => {
-  game.pipe(map((state) => state.players))
-      .subscribe(updatePlayers);
-
-  game.pipe(map((state) => state.cardCount))
-      .subscribe(updateCardCount);
-
-  game.pipe(map((state) => state.pile))
-      .subscribe(updateNewCard);
-
-  fromEvent(document.getElementById('draw-card'), 'click').subscribe(() => {
-    game.drawCard();
-  });
-};
-
 const updatePlayers = (players) => {
   document.getElementById('players').innerHTML = players.map(
       (player) =>
@@ -35,4 +19,19 @@ const updateNewCard = (pile) => {
     document.getElementById('new-card').innerHTML =
         `<img class='card' src='/cards/${card}.svg' width='150'/>`;
   }
+};
+
+export default (game) => {
+  game.pipe(map((state) => state.players))
+      .subscribe(updatePlayers);
+
+  game.pipe(map((state) => state.cardCount))
+      .subscribe(updateCardCount);
+
+  game.pipe(map((state) => state.pile))
+      .subscribe(updateNewCard);
+
+  fromEvent(document.getElementById('draw-card'), 'click').subscribe(() => {
+    game.drawCard();
+  });
 };
