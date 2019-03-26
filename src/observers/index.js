@@ -1,5 +1,5 @@
 import {map} from 'rxjs/operators';
-import {fromEvent} from 'rxjs/index';
+import {fromEvent} from 'rxjs';
 
 
 export default (game) => {

@@ -1,4 +1,4 @@
-import {fromEvent} from 'rxjs/index';
+import {fromEvent} from 'rxjs';
 import Game from './game';
 import configureObservers from './observers';
 import './styles/index.scss';
