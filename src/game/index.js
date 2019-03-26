@@ -9,21 +9,13 @@ export default class Game {
     players: createPlayers(),
     pile: [],
     turnIndex: 0,
-    actualCard: 'A',
+    cardCount: 'K',
   };
 
   constructor() {
     this.subject = new Subject();
     this.observable = this.subject.asObservable();
   }
-
-  // TODO: remove
-  addPlayer = (name) => {
-    this.state.players.push({
-      name,
-    });
-    this.subject.next(this.state);
-  };
 
   drawCard = () => {
     const {turnIndex, players} = this.state;
@@ -35,10 +27,10 @@ export default class Game {
   }
 
   endTurn = () => {
-    const {turnIndex, players, actualCard} = this.state;
+    const {turnIndex, players, cardCount} = this.state;
 
     this.state.turnIndex = (turnIndex + 1) % players.length;
-    this.state.actualCard = getNextCard(actualCard);
+    this.state.cardCount = getNextCard(cardCount);
 
     this.subject.next(this.state);
   }

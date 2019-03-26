@@ -7,13 +7,17 @@ export default (game) => {
       .subscribe(
           (players) => {
             document.getElementById('players').innerHTML = players.map(
-                (player) => player.name).join('<br/>');
+                (player) => {
+                  let playerHMTL = `Nombre: ${player.name} <br/>`
+                  playerHMTL += `Cartas restantes: ${player.stock.length}`
+                  return playerHMTL;
+                }).join('<br/>');
           });
 
-  game.pipe(map((state) => state.actualCard))
+  game.pipe(map((state) => state.cardCount))
       .subscribe(
-          (actualCard) => {
-            document.getElementById('new-card').innerHTML = `Carta actual: ${actualCard}`
+          (cardCount) => {
+            document.getElementById('card-count').innerHTML = `Contador de cartas: ${cardCount}`
           });
 
   game.pipe(map((state) => state.pile))
@@ -25,9 +29,6 @@ export default (game) => {
             }
           });
 
-  fromEvent(document.getElementById('add-player'), 'click').subscribe(() => {
-    game.addPlayer('Thomas');
-  });
   fromEvent(document.getElementById('draw-card'), 'click').subscribe(() => {
     game.drawCard();
   });
