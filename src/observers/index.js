@@ -4,32 +4,35 @@ import {fromEvent} from 'rxjs';
 
 export default (game) => {
   game.pipe(map((state) => state.players))
-      .subscribe(
-          (players) => {
-            document.getElementById('players').innerHTML = players.map(
-                (player) => {
-                  let playerHMTL = `Nombre: ${player.name} <br/>`
-                  playerHMTL += `Cartas restantes: ${player.stock.length}`
-                  return playerHMTL;
-                }).join('<br/>');
-          });
+      .subscribe(updatePlayers);
 
   game.pipe(map((state) => state.cardCount))
-      .subscribe(
-          (cardCount) => {
-            document.getElementById('card-count').innerHTML = `Contador de cartas: ${cardCount}`
-          });
+      .subscribe(updateCardCount);
 
   game.pipe(map((state) => state.pile))
-      .subscribe(
-          (pile) => {
-            const card = pile[pile.length-1]
-            if (card) {
-              document.getElementById('new-card').innerHTML = `<img class='card' src='/cards/${card}.svg' width='150'/>`
-            }
-          });
+      .subscribe(updateNewCard);
 
   fromEvent(document.getElementById('draw-card'), 'click').subscribe(() => {
     game.drawCard();
   });
+};
+
+const updatePlayers = (players) => {
+  document.getElementById('players').innerHTML = players.map(
+      (player) =>
+        `Nombre: ${player.name} <br/> Cartas restantes: ${player.stock.length}`)
+      .join('<br/>');
+};
+
+const updateCardCount = (cardCount) => {
+  document.getElementById('card-count').innerHTML =
+      `Contador de cartas: ${cardCount}`;
+};
+
+const updateNewCard = (pile) => {
+  const card = pile[pile.length-1];
+  if (card) {
+    document.getElementById('new-card').innerHTML =
+        `<img class='card' src='/cards/${card}.svg' width='150'/>`;
+  }
 };
