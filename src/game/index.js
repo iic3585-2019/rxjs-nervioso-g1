@@ -47,6 +47,7 @@ export default class Game {
         return;
       }
       this.drawCard();
+      this.subject.next(this.state);
       return;
     }
 
@@ -59,12 +60,10 @@ export default class Game {
           if (this.state.handPlayers.reduce((a, b) => a + b) === this.state.handPlayers.length - 1) {
             const loserIndex = this.state.handPlayers.indexOf(0);
             this.resetPile(loserIndex);
-            return;
           }
         } else {
           const handPlayerIndex = this.state.players.indexOf(handPlayer);
           this.resetPile(handPlayerIndex);
-          return;
         }
       }
     }
@@ -78,6 +77,7 @@ export default class Game {
     this.state.cardCount = getFirstCard();
     this.state.handPlayers.fill(0);
     this.state.turnIndex = playerIndex;
+    this.subject.next(this.state);
   }
 
 

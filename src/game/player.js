@@ -11,7 +11,7 @@ export default class Player {
   }
 
   mergePileToStock = (pile) => {
-    this.stock = this.stock.concat(pile);
+    this.stock = pile.reverse().concat(this.stock);
   }
 
   drawCard = () => this.stock.pop()
