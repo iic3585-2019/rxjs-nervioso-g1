@@ -5,6 +5,7 @@ export default class Player {
     this.keyDraw = keyDraw;
     this.keyHand = keyHand;
     this.hand = -1;
+    this.won = false;
   }
 
   addCardToStock = (card) => {

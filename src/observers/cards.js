@@ -1,4 +1,4 @@
-import {PLAYING, WAITING_THROW} from '../game/consts';
+import {FINISH, PLAYING, WAITING_THROW} from '../game/consts';
 
 export const updateCardCount = ([cardCount, status]) => {
   if (status === WAITING_THROW) {
@@ -6,8 +6,8 @@ export const updateCardCount = ([cardCount, status]) => {
   } else if (status === PLAYING) {
     document.getElementById('card-count').innerHTML =
       `Contador de cartas: ${cardCount}`;
-  } else {
-    document.getElementById('card-count').innerHTML = 'WTF';
+  } else if (status === FINISH){
+    document.getElementById('card-count').innerHTML = '¡Fin del juego!';
   }
 };
 
