@@ -31,11 +31,6 @@ export const createPlayers = () => {
   return players;
 };
 
-
-export const getFirstCard = () => {
-  return CARDS_NUMBERS[0];
-};
-
 export const getNextCard = (actualCard) => {
   const cardIndex = CARDS_NUMBERS.indexOf(actualCard);
   const nextCardIndex = (cardIndex + 1) % CARDS_NUMBERS.length;

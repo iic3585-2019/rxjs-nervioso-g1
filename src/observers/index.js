@@ -13,6 +13,6 @@ export default (game) => {
   game.pipe(map((state) => state.pile))
       .subscribe(updateNewCard);
 
-  fromEvent(document, 'keydown').pipe(map(event => event.key.toLowerCase()))
+  fromEvent(document, 'keydown').pipe(map((event) => event.key.toLowerCase()))
       .subscribe(game.respondToInput);
 };
