@@ -1,5 +1,6 @@
 export const WAITING_PLAYERS = 'WAITING_PLAYERS';
 export const WAITING_THROW = 'WAITING_THROW';
+export const WAITING_TIMEOUT = 'WAITING_TIMEOUT';
 export const PLAYING = 'PLAYING';
 export const FINISH = 'FINISH';
 

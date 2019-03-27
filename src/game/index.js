@@ -1,5 +1,5 @@
 import {Subject} from 'rxjs';
-import {FINISH, PLAYING, WAITING_PLAYERS, WAITING_THROW} from './consts';
+import {FINISH, PLAYING, WAITING_PLAYERS, WAITING_THROW, WAITING_TIMEOUT} from './consts';
 import {createPlayers, getFirstCard, getNextCard} from './util';
 
 
@@ -32,7 +32,7 @@ export default class Game {
 
   respondToInput = data => {
     const {status} = this.state;
-    if (status === FINISH) return;
+    if ([FINISH, WAITING_TIMEOUT].includes(status)) return;
 
     if (data.key === this.state.players[this.state.turnIndex].keyDraw) {
       this.drawCard();
@@ -93,13 +93,18 @@ export default class Game {
         player.hand = number + 1;
         if (player.hand === players.length - 1) {
           const loserIndex = this.state.players.indexOf(players.filter(player => player.hand === -1)[0]);
-          this.resetPile(loserIndex);
+          this.state.status = WAITING_TIMEOUT;
+          this.subject.next(this.state);
+          setTimeout(() => this.resetPile(loserIndex), 1000);
         } else {
           this.subject.next(this.state);
         }
       } else {
         const handPlayerIndex = this.state.players.indexOf(player);
-        this.resetPile(handPlayerIndex);
+        this.state.players[handPlayerIndex].hand = 1;
+        this.state.status = WAITING_TIMEOUT;
+        this.subject.next(this.state);
+        setTimeout(() => this.resetPile(handPlayerIndex), 1000);
       }
     }
   }
