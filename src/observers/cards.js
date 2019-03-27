@@ -6,7 +6,7 @@ export const updateCardCount = ([cardCount, status]) => {
   } else if (status === PLAYING) {
     document.getElementById('card-count').innerHTML =
       `${cardCount}`;
-  } else if (status === FINISH){
+  } else if (status === FINISH) {
     document.getElementById('card-count').innerHTML = '¡Fin del juego!';
   }
 };

@@ -1,4 +1,4 @@
-export const updatePlayers = game => players => {
+export const updatePlayers = (game) => (players) => {
   document.getElementById('players').innerHTML = players.map(
       (player) => {
         const classNames = ['player-card'];
@@ -28,6 +28,6 @@ export const updatePlayers = game => players => {
                   Hand: ${player.keyHand.toUpperCase()}
                 </div>
             </div>
-        </div>`
-      }).join("");
+        </div>`;
+      }).join('');
 };
