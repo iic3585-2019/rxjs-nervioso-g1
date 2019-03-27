@@ -42,32 +42,39 @@ export default class Game {
 
   respondToInput = data => {
     if (data.key === this.state.players[this.state.turnIndex].keyDraw) {
-      if (this.state.handPlayers.reduce((a, b) => a + b) > 0) {
-        this.resetPile(this.state.turnIndex);
+        this.drawInput();
         return;
-      }
-      this.drawCard();
-      this.subject.next(this.state);
-      return;
     }
 
     const handPlayerArr = this.state.players.filter(a => data.key === a.keyHand);
     if (handPlayerArr.length > 0) {
       const handPlayer = handPlayerArr[0];
-      if (this.state.pile.length > 0) {
-        if (this.state.pile.slice(-1).pop()[0] === this.state.cardCount) {
-          this.state.handPlayers[this.state.players.indexOf(handPlayer)] = 1;
-          if (this.state.handPlayers.reduce((a, b) => a + b) === this.state.handPlayers.length - 1) {
-            const loserIndex = this.state.handPlayers.indexOf(0);
-            this.resetPile(loserIndex);
-          }
-        } else {
-          const handPlayerIndex = this.state.players.indexOf(handPlayer);
-          this.resetPile(handPlayerIndex);
+      this.handInput(handPlayer);
+    }
+  }
+
+  drawInput = () => {
+    if (this.state.handPlayers.reduce((a, b) => a + b) > 0) {
+      this.resetPile(this.state.turnIndex);
+      return;
+    }
+    this.drawCard();
+    this.subject.next(this.state);
+  }
+
+  handInput = player => {
+    if (this.state.pile.length > 0) {
+      if (this.state.pile.slice(-1).pop()[0] === this.state.cardCount) {
+        this.state.handPlayers[this.state.players.indexOf(player)] = 1;
+        if (this.state.handPlayers.reduce((a, b) => a + b) === this.state.handPlayers.length - 1) {
+          const loserIndex = this.state.handPlayers.indexOf(0);
+          this.resetPile(loserIndex);
         }
+      } else {
+        const handPlayerIndex = this.state.players.indexOf(player);
+        this.resetPile(handPlayerIndex);
       }
     }
-
   }
 
   resetPile = playerIndex => {
