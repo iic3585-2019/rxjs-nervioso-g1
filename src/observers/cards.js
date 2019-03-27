@@ -8,5 +8,7 @@ export const updateNewCard = (pile) => {
   if (card) {
     document.getElementById('new-card').innerHTML =
         `<img class='card' src='/cards/${card}.svg' width='150'/>`;
+  } else {
+    document.getElementById('new-card').innerHTML = '';
   }
 };
