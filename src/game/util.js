@@ -21,15 +21,20 @@ export const distributeDeck = (players) => {
 
 export const createPlayers = () => {
   // TODO: change parameters to corresponding event
-  const p1 = new Player('Thomas', 'A', 'S');
-  const p2 = new Player('Pezoa', 'C', 'V');
+  const p1 = new Player('Thomas', 'q', 'a');
+  const p2 = new Player('Pezoa', 'w', 's');
+  const p3 = new Player('Flo', 'e', 'd');
 
-  const players = [p1, p2];
+  const players = [p1, p2, p3];
   distributeDeck(players);
 
   return players;
 };
 
+
+export const getFirstCard = () => {
+  return CARDS_NUMBERS[0];
+};
 
 export const getNextCard = (actualCard) => {
   const cardIndex = CARDS_NUMBERS.indexOf(actualCard);

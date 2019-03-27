@@ -10,6 +10,7 @@ export default class Game {
     pile: [],
     turnIndex: 0,
     cardCount: 'K',
+    handPlayers: [],
   };
 
   constructor() {
@@ -33,6 +34,10 @@ export default class Game {
     this.state.cardCount = getNextCard(cardCount);
 
     this.subject.next(this.state);
+  }
+
+  genHandPlayers = () => {
+    this.state.handPlayers = new Array(this.state.players.length).fill(0);
   }
 
 
