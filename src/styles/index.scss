@@ -4,10 +4,49 @@ html {
   font-family: 'Roboto', sans-serif;
 }
 
+#card-count {
+  text-align: center;
+}
+
 #players {
-  background-color: lightblue;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.player-card {
+  box-sizing: content-box;
+  padding: 1rem;
+  background-color: lightgrey;
+  border-radius: 0.5rem;
+  border: 3px solid lightgray;
+  &.turn {
+    border-color: #4583ff;
+  }
+  &.winner {
+    background-color: lightgreen;
+    border-color: lightgreen;
+  }
+  &.hand {
+    border-color: red;
+  }
+  .player-heading {
+    font-size: 1.3rem;
+    font-weight: bold;
+  }
+  .keys {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
 }
 
 #new-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
   height: 220px;
+  margin-bottom: 10px;
 }

@@ -1,6 +1,14 @@
-export const updateCardCount = (cardCount) => {
-  document.getElementById('card-count').innerHTML =
-      `Contador de cartas: ${cardCount}`;
+import {FINISH, PLAYING, WAITING_THROW} from '../game/consts';
+
+export const updateCardCount = ([cardCount, status]) => {
+  if (status === WAITING_THROW) {
+    document.getElementById('card-count').innerHTML = 'Esperando';
+  } else if (status === PLAYING) {
+    document.getElementById('card-count').innerHTML =
+      `${cardCount}`;
+  } else if (status === FINISH){
+    document.getElementById('card-count').innerHTML = '¡Fin del juego!';
+  }
 };
 
 export const updateNewCard = (pile) => {

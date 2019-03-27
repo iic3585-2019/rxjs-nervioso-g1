@@ -4,10 +4,10 @@ import configureObservers from './observers';
 import './styles/index.scss';
 
 const game = new Game();
-game.genHandPlayers();
 
 fromEvent(window, 'load').subscribe(() => {
   configureObservers(game);
+  game.start();
 });
 
 if (module.hot) {

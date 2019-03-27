@@ -1,16 +1,15 @@
 import {Subject} from 'rxjs';
-import {WAITING_PLAYERS} from './consts';
+import {FINISH, PLAYING, WAITING_PLAYERS, WAITING_THROW, WAITING_TIMEOUT} from './consts';
 import {createPlayers, getFirstCard, getNextCard} from './util';
 
 
 export default class Game {
   state = {
     status: WAITING_PLAYERS,
-    players: createPlayers(),
+    players: [],
     pile: [],
     turnIndex: 0,
-    cardCount: 'K',
-    handPlayers: [],
+    cardCount: 'K'
   };
 
   constructor() {
@@ -18,75 +17,123 @@ export default class Game {
     this.observable = this.subject.asObservable();
   }
 
+  currentPlayers = () => this.state.players.filter(player => !player.won);
+
+  currentPlayer = () => this.state.players[this.state.turnIndex];
+
+  playerHaveHand = () => this.state.players.map(player => player.hand).filter(e => e !== -1).length > 0;
+
+  start = () => {
+    this.state.players = createPlayers();
+    this.state.status = WAITING_THROW;
+    this.subject.next(this.state);
+  };
+
+
+  respondToInput = keyPressed => {
+    const {status} = this.state;
+    if ([FINISH, WAITING_TIMEOUT].includes(status)) return;
+
+    if (keyPressed === this.state.players[this.state.turnIndex].keyDraw.toLowerCase()) {
+      this.drawCard();
+    } else {
+      const handPlayerArr = this.state.players.filter(a => keyPressed === a.keyHand.toLowerCase());
+      if (handPlayerArr.length > 0) {
+        const handPlayer = handPlayerArr[0];
+        if (!handPlayer.won && handPlayer.hand === -1) this.playerHand(handPlayer);
+      }
+    }
+  }
+
   drawCard = () => {
-    const {turnIndex, players} = this.state;
+    const {turnIndex, players, status} = this.state;
+
+    if (players[turnIndex].stock.length === 0){
+      this.endGame();
+      return;
+    }
+
+    if (this.playerHaveHand()) {
+      this.resetPile(this.state.turnIndex);
+      return;
+    }
+
+    if (status === WAITING_THROW) {
+      this.state.status = PLAYING;
+    }
+
     const player = players[turnIndex];
     const card = player.drawCard();
     this.state.pile.push(card);
-
     this.endTurn();
   }
 
   endTurn = () => {
-    const {turnIndex, players, cardCount} = this.state;
-
-    this.state.turnIndex = (turnIndex + 1) % players.length;
+    const {turnIndex, cardCount, players} = this.state;
+    let nextPlayerIndex = (turnIndex + 1) % players.length;
+    if (players.filter(player => player.stock.length > 0).length === 0) {
+      nextPlayerIndex = turnIndex;
+    } else {
+      while (players[nextPlayerIndex].stock.length === 0) {
+        nextPlayerIndex = (nextPlayerIndex + 1) % players.length;
+      }
+    }
+    this.state.turnIndex = nextPlayerIndex;
     this.state.cardCount = getNextCard(cardCount);
-
     this.subject.next(this.state);
   }
 
-  genHandPlayers = () => {
-    this.state.handPlayers = new Array(this.state.players.length).fill(0);
-  }
-
-  respondToInput = data => {
-    if (data.key === this.state.players[this.state.turnIndex].keyDraw) {
-        this.drawInput();
-        return;
-    }
-
-    const handPlayerArr = this.state.players.filter(a => data.key === a.keyHand);
-    if (handPlayerArr.length > 0) {
-      const handPlayer = handPlayerArr[0];
-      this.handInput(handPlayer);
-    }
-  }
-
-  drawInput = () => {
-    if (this.state.handPlayers.reduce((a, b) => a + b) > 0) {
-      this.resetPile(this.state.turnIndex);
-      return;
-    }
-    this.drawCard();
-    this.subject.next(this.state);
-  }
-
-  handInput = player => {
+  playerHand = player => {
+    const players = this.currentPlayers();
     if (this.state.pile.length > 0) {
-      if (this.state.pile.slice(-1).pop()[0] === this.state.cardCount) {
-        this.state.handPlayers[this.state.players.indexOf(player)] = 1;
-        if (this.state.handPlayers.reduce((a, b) => a + b) === this.state.handPlayers.length - 1) {
-          const loserIndex = this.state.handPlayers.indexOf(0);
-          this.resetPile(loserIndex);
+      const card = this.state.pile.slice(-1).pop();
+      const cardNumber = card.includes("10") ? "10" : card[0];
+      if (cardNumber === this.state.cardCount) {
+        const number = Math.max(...players.map(player => player.hand), 0);
+        player.hand = number + 1;
+        if (player.hand === players.length - 1) {
+          const loserIndex = this.state.players.indexOf(players.filter(player => player.hand === -1)[0]);
+          this.state.status = WAITING_TIMEOUT;
+          this.subject.next(this.state);
+          setTimeout(() => this.resetPile(loserIndex), 1000);
+        } else {
+          this.subject.next(this.state);
         }
       } else {
         const handPlayerIndex = this.state.players.indexOf(player);
-        this.resetPile(handPlayerIndex);
+        this.state.players[handPlayerIndex].hand = 1;
+        this.state.status = WAITING_TIMEOUT;
+        this.subject.next(this.state);
+        setTimeout(() => this.resetPile(handPlayerIndex), 1000);
       }
     }
   }
 
   resetPile = playerIndex => {
+    const {players} = this.state;
     const player = this.state.players[playerIndex];
     player.mergePileToStock(this.state.pile);
-    this.state.pile = [];
-    this.state.cardCount = getFirstCard();
-    this.state.handPlayers.fill(0);
-    this.state.turnIndex = playerIndex;
+    players.filter(player => player.stock.length === 0).forEach(player => player.won = true);
+    if (players.filter(player => !player.won).length === 1) {
+      this.state.status = FINISH;
+      this.state.pile = [];
+      this.state.cardCount = 'K';
+      this.state.players.forEach(player => player.hand = -1);
+      this.state.turnIndex = playerIndex;
+    } else {
+      this.state.status = WAITING_THROW;
+      this.state.pile = [];
+      this.state.cardCount = 'K';
+      this.state.players.forEach(player => player.hand = -1);
+      this.state.turnIndex = playerIndex;
+    }
     this.subject.next(this.state);
   }
 
+  endGame = () => {
+    this.state.status = FINISH;
+    this.subject.next(this.state);
+  };
 
   subscribe = (f) => this.observable.subscribe(f);
 
