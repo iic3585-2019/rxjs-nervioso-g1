@@ -20,6 +20,14 @@ export const updatePlayers = game => players => {
             <div>
                 Cartas restantes: ${player.stock.length}
             </div>
+            <div class="keys">
+                <div>
+                  Draw: ${player.keyDraw.toUpperCase()}
+                </div>
+                <div>
+                  Hand: ${player.keyHand.toUpperCase()}
+                </div>
+            </div>
         </div>`
       }).join("");
 };

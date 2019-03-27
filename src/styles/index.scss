@@ -34,6 +34,12 @@ html {
     font-size: 1.3rem;
     font-weight: bold;
   }
+  .keys {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
 }
 
 #new-card {

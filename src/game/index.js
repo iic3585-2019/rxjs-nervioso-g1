@@ -30,14 +30,14 @@ export default class Game {
   };
 
 
-  respondToInput = data => {
+  respondToInput = keyPressed => {
     const {status} = this.state;
     if ([FINISH, WAITING_TIMEOUT].includes(status)) return;
 
-    if (data.key === this.state.players[this.state.turnIndex].keyDraw) {
+    if (keyPressed === this.state.players[this.state.turnIndex].keyDraw.toLowerCase()) {
       this.drawCard();
     } else {
-      const handPlayerArr = this.state.players.filter(a => data.key === a.keyHand);
+      const handPlayerArr = this.state.players.filter(a => keyPressed === a.keyHand.toLowerCase());
       if (handPlayerArr.length > 0) {
         const handPlayer = handPlayerArr[0];
         if (!handPlayer.won && handPlayer.hand === -1) this.playerHand(handPlayer);
