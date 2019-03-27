@@ -19,6 +19,8 @@ export default class Game {
 
   currentPlayers = () => this.state.players.filter(player => !player.won);
 
+  currentPlayer = () => this.state.players[this.state.turnIndex];
+
   playerHaveHand = () => this.state.players.map(player => player.hand).filter(e => e !== -1).length > 0;
 
   start = () => {
@@ -89,9 +91,11 @@ export default class Game {
       if (cardNumber === this.state.cardCount) {
         const number = Math.max(...players.map(player => player.hand), 0);
         player.hand = number + 1;
-        if (player.hand === players.length) {
-          const loserIndex = this.state.players.indexOf(player);
+        if (player.hand === players.length - 1) {
+          const loserIndex = this.state.players.indexOf(players.filter(player => player.hand === -1)[0]);
           this.resetPile(loserIndex);
+        } else {
+          this.subject.next(this.state);
         }
       } else {
         const handPlayerIndex = this.state.players.indexOf(player);
