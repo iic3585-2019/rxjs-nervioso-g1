@@ -22,8 +22,8 @@ export const distributeDeck = (players) => {
 export const createPlayers = () => {
   // TODO: change parameters to corresponding event
   const p1 = new Player('Thomas', 'q', 'a');
-  const p2 = new Player('Pezoa', 'w', 's');
-  const p3 = new Player('Flo', 'e', 'd');
+  const p2 = new Player('Pezoa', 'b', 'n');
+  const p3 = new Player('Flo', 'p', 'o');
 
   const players = [p1, p2, p3];
   distributeDeck(players);
